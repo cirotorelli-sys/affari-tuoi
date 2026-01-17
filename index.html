@@ -549,6 +549,48 @@
             animation: prizeGlow 1.5s ease-in-out infinite;
         }
         
+        .gennarino-image {
+            width: 220px;
+            height: 220px;
+            margin: 20px auto;
+            position: relative;
+            animation: gennarinoAppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .gennarino-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 40px rgba(255, 215, 0, 0.8));
+            animation: gennarinoWiggle 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes gennarinoAppear {
+            0% {
+                transform: scale(0) rotate(-360deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(20deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes gennarinoWiggle {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                transform: rotate(-5deg) scale(1.05);
+            }
+            75% {
+                transform: rotate(5deg) scale(1.05);
+            }
+        }
+        
         /* Animazioni */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -1784,7 +1826,8 @@
                 showRevealModal(
                     '🎉 HAI TROVATO GENNARINO!',
                     formatPrize(gameState.jackpot),
-                    `Complimenti! Hai vinto il jackpot di ${formatPrize(gameState.jackpot)}! Questo premio si aggiungerà alla tua vincita finale.`
+                    `<strong style="color: var(--gold); font-size: 1.2rem;">Complimenti! Hai vinto il jackpot!</strong><br><br>Il premio di ${formatPrize(gameState.jackpot)} si aggiungerà alla tua vincita finale!`,
+                    true  // Mostra Gennarino!
                 );
             } else if (value === 'PACCO_NERO') {
                 AudioSystem.playSound('dramatic');
@@ -2201,11 +2244,19 @@
             document.getElementById('jackpot-value').textContent = formatPrize(gameState.jackpot);
         }
         
-        function showRevealModal(title, prize, message) {
+        function showRevealModal(title, prize, message, showGennarino = false) {
             const modal = document.getElementById('reveal-modal');
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-prize').textContent = prize;
-            document.getElementById('modal-message').innerHTML = message;
+            
+            // Aggiungi immagine Gennarino se necessario
+            if (showGennarino) {
+                const gennarinoHtml = '<div class="gennarino-image"><img src="gennarino.png" alt="Gennarino"></div>';
+                document.getElementById('modal-message').innerHTML = gennarinoHtml + message;
+            } else {
+                document.getElementById('modal-message').innerHTML = message;
+            }
+            
             modal.classList.add('active');
         }
         
