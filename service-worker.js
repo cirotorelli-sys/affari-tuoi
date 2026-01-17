@@ -1,4 +1,4 @@
-const CACHE_NAME = 'affari-tuoi-v5';
+const CACHE_NAME = 'affari-tuoi-v8';
 const urlsToCache = [
   './',
   './index.html',

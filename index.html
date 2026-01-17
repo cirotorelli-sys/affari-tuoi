@@ -312,6 +312,32 @@
             letter-spacing: 2px;
         }
         
+        .prize-section {
+            margin-bottom: 20px;
+        }
+        
+        .prize-section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        .blue-section-title {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.3), rgba(13, 71, 161, 0.3));
+            color: #90CAF9;
+            border: 2px solid #64B5F6;
+        }
+        
+        .red-section-title {
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.3), rgba(139, 0, 0, 0.3));
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+        
         .prizes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -329,6 +355,18 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+        }
+        
+        .prize-item.blue-prize {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.3), rgba(13, 71, 161, 0.3));
+            border-color: #64B5F6;
+            color: #E3F2FD;
+        }
+        
+        .prize-item.red-prize {
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.3), rgba(139, 0, 0, 0.3));
+            border-color: var(--gold);
+            color: var(--gold);
         }
         
         .prize-item::before {
@@ -381,6 +419,7 @@
             margin-bottom: 20px;
         }
         
+        /* Pacchi - TUTTI ROSSI come in TV (solo il tabellone ha blu/rossi) */
         .box {
             aspect-ratio: 3/4;
             background: linear-gradient(135deg, var(--red), var(--dark-red));
@@ -395,6 +434,12 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .box:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.5);
+            border-color: white;
         }
         
         .box::before {
@@ -1288,7 +1333,18 @@
             <!-- Tabellone premi -->
             <div class="prize-board">
                 <h3>📊 TABELLONE PREMI</h3>
-                <div class="prizes-grid" id="prizes-grid"></div>
+                
+                <!-- Premi Blu -->
+                <div class="prize-section">
+                    <div class="prize-section-title blue-section-title">💙 PACCHI BLU (0€ - 500€)</div>
+                    <div class="prizes-grid" id="blue-prizes-grid"></div>
+                </div>
+                
+                <!-- Premi Rossi -->
+                <div class="prize-section">
+                    <div class="prize-section-title red-section-title">❤️ PACCHI ROSSI (5.000€ - 300.000€)</div>
+                    <div class="prizes-grid" id="red-prizes-grid"></div>
+                </div>
             </div>
             
             <!-- Messaggi e offerte -->
@@ -1675,11 +1731,16 @@
             'Puglia', 'Basilicata', 'Calabria', 'Sicilia', 'Sardegna'
         ];
         
-        // Premi secondo il regolamento
-        const BASE_PRIZES = [
-            0, 1, 5, 10, 20, 50, 75, 100, 200, 500,
-            10000, 15000, 20000, 30000, 50000, 75000, 100000, 200000, 300000
+        // Premi secondo il regolamento - DIVISI IN BLU E ROSSI
+        const BLUE_PRIZES = [
+            0, 1, 5, 10, 20, 50, 75, 100, 200, 500
         ];
+        
+        const RED_PRIZES = [
+            5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000, 200000, 300000
+        ];
+        
+        const BASE_PRIZES = [...BLUE_PRIZES, ...RED_PRIZES];
         
         // Stato del gioco
         let gameState = {
@@ -1750,14 +1811,24 @@
         }
         
         function renderPrizeBoard() {
-            const grid = document.getElementById('prizes-grid');
-            grid.innerHTML = '';
+            const blueGrid = document.getElementById('blue-prizes-grid');
+            const redGrid = document.getElementById('red-prizes-grid');
+            blueGrid.innerHTML = '';
+            redGrid.innerHTML = '';
             
             gameState.prizes.forEach(prize => {
                 const div = document.createElement('div');
-                div.className = `prize-item ${prize.eliminated ? 'eliminated' : ''}`;
+                const isBlue = BLUE_PRIZES.includes(prize.value);
+                const colorClass = isBlue ? 'blue-prize' : 'red-prize';
+                div.className = `prize-item ${colorClass} ${prize.eliminated ? 'eliminated' : ''}`;
                 div.textContent = formatPrize(prize.value);
-                grid.appendChild(div);
+                
+                // Aggiungi alla griglia corretta
+                if (isBlue) {
+                    blueGrid.appendChild(div);
+                } else {
+                    redGrid.appendChild(div);
+                }
             });
         }
         
@@ -1767,6 +1838,8 @@
             
             gameState.boxes.forEach((box, index) => {
                 const div = document.createElement('div');
+                
+                // TUTTI I PACCHI SONO ROSSI (tranne quello del giocatore che è oro)
                 div.className = `box ${box.opened ? 'opened' : ''} ${index === gameState.playerBoxIndex ? 'player-box' : ''}`;
                 div.innerHTML = `
                     <div class="box-number">${box.id}</div>
@@ -2245,14 +2318,16 @@
         }
         
         function showRevealModal(title, prize, message, showGennarino = false) {
+            console.log('showRevealModal chiamata, showGennarino:', showGennarino);
             const modal = document.getElementById('reveal-modal');
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-prize').textContent = prize;
             
             // Aggiungi immagine Gennarino se necessario
             if (showGennarino) {
-                const gennarinoHtml = '<div class="gennarino-image"><img src="gennarino.png" alt="Gennarino"></div>';
-                document.getElementById('modal-message').innerHTML = gennarinoHtml + message;
+                console.log('Aggiungendo immagine Gennarino');
+                const gennarinoHtml = '<div class="gennarino-image"><img src="gennarino.png" alt="Gennarino" onerror="console.error(\'Gennarino non caricato\')"></div>';
+                document.getElementById('modal-message').innerHTML = message + gennarinoHtml;
             } else {
                 document.getElementById('modal-message').innerHTML = message;
             }
