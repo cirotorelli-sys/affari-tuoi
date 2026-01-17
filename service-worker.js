@@ -1,8 +1,10 @@
-const CACHE_NAME = 'affari-tuoi-v1';
+const CACHE_NAME = 'affari-tuoi-v3';
 const urlsToCache = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './studio-background.png',
+  './conduttore.png'
 ];
 
 // Installazione del Service Worker

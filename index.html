@@ -38,6 +38,22 @@
             color: white;
             overflow-x: hidden;
             min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('studio-background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: -1;
         }
         
         .background-pattern {
@@ -144,6 +160,31 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 20px 60px rgba(255, 215, 0, 0.2);
             max-width: 600px;
+            position: relative;
+        }
+        
+        .welcome-conductor {
+            width: 120px;
+            height: 120px;
+            margin: -60px auto 20px;
+            position: relative;
+        }
+        
+        .welcome-conductor img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(255, 215, 0, 0.5));
+            animation: welcomeBounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes welcomeBounce {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-15px) scale(1.05);
+            }
         }
         
         .welcome-content h2 {
@@ -872,14 +913,29 @@
             background: linear-gradient(135deg, var(--bg-dark), var(--dark-blue));
             border: 4px solid var(--gold);
             border-radius: 25px;
-            padding: 40px;
-            max-width: 550px;
+            padding: 25px 20px;
+            max-width: 450px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
             text-align: center;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.4);
             animation: phoneRing 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             position: relative;
-            overflow: hidden;
+        }
+        
+        .doctor-offer-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .doctor-offer-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .doctor-offer-content::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
         }
         
         .doctor-offer-content::before {
@@ -908,26 +964,65 @@
         }
         
         .phone-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
             animation: phoneShake 0.5s ease-in-out infinite;
             display: inline-block;
         }
         
+        .conductor-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            position: relative;
+            animation: conductorPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .conductor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(255, 215, 0, 0.4));
+            animation: conductorFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes conductorPop {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(10deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes conductorFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(5deg);
+            }
+        }
+        
         .doctor-title {
             font-family: 'Oswald', sans-serif;
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
             color: var(--gold);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 2px;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
         }
         
         .doctor-subtitle {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             font-style: italic;
         }
         
@@ -935,13 +1030,13 @@
             background: rgba(255, 215, 0, 0.1);
             border: 3px solid var(--gold);
             border-radius: 15px;
-            padding: 25px;
-            margin: 25px 0;
+            padding: 15px;
+            margin: 15px 0;
             position: relative;
         }
         
         .offer-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--gold);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -950,7 +1045,7 @@
         }
         
         .offer-amount {
-            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-size: clamp(2rem, 6vw, 3rem);
             font-weight: 700;
             font-family: 'Oswald', sans-serif;
             color: var(--gold);
@@ -961,17 +1056,17 @@
         
         .offer-buttons {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 15px;
             flex-wrap: wrap;
         }
         
         .offer-btn {
             flex: 1;
-            min-width: 140px;
-            padding: 18px 30px;
-            font-size: 1.1rem;
+            min-width: 120px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
             font-weight: 700;
             border: none;
             border-radius: 50px;
@@ -1025,11 +1120,11 @@
         }
         
         .offer-message {
-            font-size: 1rem;
-            line-height: 1.6;
+            font-size: 0.9rem;
+            line-height: 1.5;
             color: rgba(255, 255, 255, 0.9);
-            margin: 20px 0;
-            padding: 15px;
+            margin: 15px 0;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
@@ -1120,6 +1215,9 @@
         <!-- Schermata di benvenuto -->
         <div id="welcome-screen">
             <div class="welcome-content">
+                <div class="welcome-conductor">
+                    <img src="conduttore.png" alt="Conduttore Affari Tuoi">
+                </div>
                 <h2>Benvenuto ad Affari Tuoi!</h2>
                 <p>Hai davanti a te 20 pacchi contenenti premi da 0€ a 300.000€. Il tuo obiettivo è vincere il premio più alto possibile!</p>
                 <p><strong>Come si gioca:</strong> Scegli i pacchi da aprire uno alla volta. Il Dottore ti farà delle offerte: accetta o continua a giocare!</p>
@@ -1202,6 +1300,9 @@
     <!-- Pop-up Offerta Dottore -->
     <div class="doctor-offer-popup" id="doctor-offer-popup">
         <div class="doctor-offer-content">
+            <div class="conductor-image">
+                <img src="conduttore.png" alt="Conduttore">
+            </div>
             <div class="phone-icon">📞</div>
             <h2 class="doctor-title">Chiamata del Dottore</h2>
             <p class="doctor-subtitle">"Ho un'offerta per te..."</p>
