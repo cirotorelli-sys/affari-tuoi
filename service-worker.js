@@ -1,11 +1,11 @@
-const CACHE_NAME = 'affari-tuoi-v8';
+const CACHE_NAME = 'affari-tuoi-v9';
 const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
   './studio-background.png',
-  './conduttore.png',
-  './gennarino.png'
+  './conduttore.png'
+  // gennarino.png NON è in cache per evitare problemi
 ];
 
 // Installazione del Service Worker

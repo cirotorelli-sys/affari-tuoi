@@ -1872,6 +1872,15 @@
             // Apertura di un pacco
             if (box.opened || index === gameState.playerBoxIndex) return;
             
+            // CONTROLLA SE È L'ULTIMO PACCO - NON FARLO APRIRE!
+            const unopenedBoxes = gameState.boxes.filter(b => !b.opened && gameState.boxes.indexOf(b) !== gameState.playerBoxIndex);
+            if (unopenedBoxes.length === 1) {
+                // È l'ultimo pacco! Vai direttamente alla scelta finale
+                AudioSystem.playSound('dramatic');
+                endGameChoice();
+                return;
+            }
+            
             AudioSystem.playSound('click');
             openBox(index);
         }
@@ -2326,7 +2335,9 @@
             // Aggiungi immagine Gennarino se necessario
             if (showGennarino) {
                 console.log('Aggiungendo immagine Gennarino');
-                const gennarinoHtml = '<div class="gennarino-image"><img src="gennarino.png" alt="Gennarino" onerror="console.error(\'Gennarino non caricato\')"></div>';
+                // Cache busting per forzare il caricamento
+                const timestamp = new Date().getTime();
+                const gennarinoHtml = `<div class="gennarino-image"><img src="gennarino.png?v=${timestamp}" alt="Gennarino" onerror="console.error('Gennarino non caricato')"></div>`;
                 document.getElementById('modal-message').innerHTML = message + gennarinoHtml;
             } else {
                 document.getElementById('modal-message').innerHTML = message;
