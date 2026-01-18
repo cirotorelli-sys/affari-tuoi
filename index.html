@@ -1894,6 +1894,9 @@
             
             const value = box.value;
             
+            console.log('Pacco aperto:', box.id, 'Valore:', value, 'Tipo:', typeof value);
+            console.log('openedBoxes:', gameState.openedBoxes, 'Condizione Gennarino:', value === 'GENNARINO' && gameState.openedBoxes <= 6);
+            
             // Elimina il premio dal tabellone
             if (typeof value === 'number') {
                 const prizeIndex = gameState.prizes.findIndex(p => p.value === value && !p.eliminated);
@@ -1902,16 +1905,28 @@
                 }
             }
             
-            // Controlla Gennarino nei primi 6 pacchi
-            if (value === 'GENNARINO' && gameState.openedBoxes <= 6) {
-                gameState.gennarinoFound = true;
-                AudioSystem.playSound('jackpot');
-                showRevealModal(
-                    '🎉 HAI TROVATO GENNARINO!',
-                    formatPrize(gameState.jackpot),
-                    `<strong style="color: var(--gold); font-size: 1.2rem;">Complimenti! Hai vinto il jackpot!</strong><br><br>Il premio di ${formatPrize(gameState.jackpot)} si aggiungerà alla tua vincita finale!`,
-                    true  // Mostra Gennarino!
-                );
+            // Controlla Gennarino
+            if (value === 'GENNARINO') {
+                // Gennarino trovato! Controlla se nei primi 6 per il jackpot
+                if (gameState.openedBoxes <= 6) {
+                    gameState.gennarinoFound = true;
+                    AudioSystem.playSound('jackpot');
+                    showRevealModal(
+                        '🎉 HAI TROVATO GENNARINO!',
+                        formatPrize(gameState.jackpot),
+                        `<strong style="color: var(--gold); font-size: 1.2rem;">Complimenti! Hai vinto il jackpot!</strong><br><br>Il premio di ${formatPrize(gameState.jackpot)} si aggiungerà alla tua vincita finale!`,
+                        true  // Mostra Gennarino!
+                    );
+                } else {
+                    // Gennarino trovato troppo tardi - niente jackpot ma mostra comunque l'immagine
+                    AudioSystem.playSound('reveal');
+                    showRevealModal(
+                        '🐕 HAI TROVATO GENNARINO!',
+                        '€0',
+                        `<strong style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Purtroppo hai trovato Gennarino troppo tardi!</strong><br><br>Il jackpot era disponibile solo nei primi 6 pacchi. Gennarino vale 0€.`,
+                        true  // Mostra comunque Gennarino!
+                    );
+                }
             } else if (value === 'PACCO_NERO') {
                 AudioSystem.playSound('dramatic');
                 showRevealModal(
